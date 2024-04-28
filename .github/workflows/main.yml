@@ -30,4 +30,4 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           wp theme activate twentytwentytwo --path=/opt/lampp/htdocs/wordpress
-          wp plugin activate hello.php --path=/opt/lampp/htdocs/wordpress
+          wp plugin activate hello --path=/opt/lampp/htdocs/wordpress
