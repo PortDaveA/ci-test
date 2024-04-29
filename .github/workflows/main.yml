@@ -1,15 +1,33 @@
-name: Execute remote SSH commands
-on: [push]
+name: Deploy to WordPress
+
+on:
+  push:
+    branches:
+      - master  # replace with your branch name
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Execute remote ssh commands using password
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Copy files
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "."
+        target: "/opt/lampp/htdocs/wordpress/wp-content/themes/twentytwentytwo"
+
+    - name: Activate theme and plugins
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          echo "Hello, world!"
+          wp theme activate twentytwentytwo --path=/opt/lampp/htdocs/wordpress
+          wp plugin activate hello --path=/opt/lampp/htdocs/wordpress
